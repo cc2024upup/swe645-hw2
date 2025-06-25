@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Clone Code') {
             steps {
-                git 'https://github.com/cc2024upup/swe645-hw2.git'
+               git branch: 'main', url:'https://github.com/cc2024upup/swe645-hw2.git'
             }
         }
 
