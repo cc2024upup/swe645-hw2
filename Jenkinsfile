@@ -10,7 +10,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t chaochenid/survey-app:latest .'
+                sh 'docker build -t chaochen46/survey-app:latest .'
             }
         }
 
@@ -18,7 +18,7 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
-                    sh 'docker push chaochenid/survey-app:latest'
+                    sh 'docker push chaochen46/survey-app:latest'
                 }
             }
         }
