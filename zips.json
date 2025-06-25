@@ -1,0 +1,22 @@
+[
+  { "zip": "10001", "city": "New York", "state": "NY" },
+  { "zip": "90001", "city": "Los Angeles", "state": "CA" },
+  { "zip": "60601", "city": "Chicago", "state": "IL" },
+  { "zip": "77001", "city": "Houston", "state": "TX" },
+  { "zip": "85001", "city": "Phoenix", "state": "AZ" },
+  { "zip": "19104", "city": "Philadelphia", "state": "PA" },
+  { "zip": "98101", "city": "Seattle", "state": "WA" },
+  { "zip": "20001", "city": "Washington", "state": "DC" },
+  { "zip": "33101", "city": "Miami", "state": "FL" },
+  { "zip": "30301", "city": "Atlanta", "state": "GA" },
+  { "zip": "75201", "city": "Dallas", "state": "TX" },
+  { "zip": "55401", "city": "Minneapolis", "state": "MN" },
+  { "zip": "43210", "city": "Columbus", "state": "OH" },
+  { "zip": "80201", "city": "Denver", "state": "CO" },
+  { "zip": "37201", "city": "Nashville", "state": "TN" },
+  { "zip": "94102", "city": "San Francisco", "state": "CA" },
+  { "zip": "02108", "city": "Boston", "state": "MA" },
+  { "zip": "46201", "city": "Indianapolis", "state": "IN" },
+  { "zip": "72201", "city": "Little Rock", "state": "AR" },
+  { "zip": "22312", "city": "Alexandira", "state": "VA" }
+]
