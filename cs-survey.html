@@ -1,0 +1,447 @@
+<!-- Chao Chen G01476331 -->
+<!-- The survey page is available for students to fill in basic information -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CS Department Campus-Visit Survey</title>
+
+  <!-- ✅ Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    nav {
+      background-color: #e9ecef;
+      padding: 10px 0;
+      text-align: center;
+    }
+    nav a {
+      margin: 0 15px;
+      text-decoration: none;
+      color: #0d6efd;
+      font-weight: 500;
+    }
+    .header-box {
+      background-color: #0d6efd;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    .required::after {
+      content: " *";
+      color: #dc3545;
+    }
+  </style>
+
+  <script>
+  // Utility: Get cookie by name
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());
+    return null;
+  }
+
+  // Utility: Set cookie with expiry (default 7 days)
+  function setCookie(name, value, days = 7) {
+    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
+  }
+
+  // Utility: Delete cookie
+  function deleteCookie(name) {
+    document.cookie = `${name}=; Max-Age=0; path=/`;
+  }
+
+  // Get greeting based on hour
+  function getTimeGreeting() {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good morning";
+    if (hour < 18) return "Good afternoon";
+    return "Good evening";
+  }
+
+  // Show personalized greeting or prompt for name input
+  function showGreeting() {
+    const greetingBox = document.getElementById("greeting");
+    const cookieName = getCookie("username");
+
+    if (!cookieName) {
+      // There are no cookies. The welcome message area is hidden. The form is displayed and the user enters the name
+      greetingBox.style.display = "none";
+      return;
+    }
+
+    // There are cookies that display welcome messages and reset links
+    const timeGreeting = getTimeGreeting();
+    greetingBox.innerHTML = `${timeGreeting}, ${cookieName}. Welcome to the SWE642 survey. 
+      <a href="#" onclick="promptResetName()">If you are not this user, please reset your name.</a>`;
+    greetingBox.style.display = "block";
+
+    // Meanwhile, set the name input box in the form to the cookie name
+    const nameInput = document.getElementById("username");
+    if (nameInput) {
+      nameInput.value = cookieName;
+    }
+  }
+
+  // Prompt user to reset cookie name
+  function promptResetName() {
+    const newName = prompt("Please enter your correct name:");
+    if (newName) {
+      setCookie("username", newName);
+      location.reload();
+    }
+  }
+  //Verify all form fields 
+  function handleSubmit(event) {
+    event.preventDefault();
+
+    let errors = [];
+    let invalidFields = [];
+
+    const name = document.getElementById("username");
+    const address = document.getElementById("street");
+    const email = document.getElementById("email");
+    const recommend = document.getElementById("recommend");
+    const likeCheckboxes = document.querySelectorAll('input[name="likes"]:checked');
+    const dataInput = document.getElementById("data");
+    const dataErrorMsg = document.getElementById("data-error");
+
+    // 1. Name only letters
+    const nameRegex = /^[A-Za-z\s]+$/;
+    if (!nameRegex.test(name.value.trim())) {
+      errors.push("Name should contain letters only.");
+      invalidFields.push(name);
+    }
+
+    // 2. Address allows letters, numbers, spaces, etc.
+    const addressRegex = /^[A-Za-z0-9\s,.-]+$/;
+    if (!addressRegex.test(address.value.trim())) {
+      errors.push("Address should contain only letters, numbers, spaces, commas, periods, or dashes.");
+      invalidFields.push(address);
+    }
+
+    // 3. At least two options
+    if (likeCheckboxes.length < 2) {
+      errors.push("Please select at least two options for what you like.");
+    }
+
+    // 4. Select recommendation
+    if (!recommend.value) {
+      errors.push("Please select a recommendation option.");
+      invalidFields.push(recommend);
+    }
+
+    // 5. Email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.value.trim())) {
+      errors.push("Please enter a valid email address.");
+      invalidFields.push(email);
+    }
+
+    // 6. Data field validation
+    const values = dataInput.value.split(',').map(val => val.trim());
+    const nums = values.map(Number);
+    const invalidData = values.length !== 10 || nums.some(num => isNaN(num) || num < 1 || num > 100);
+    if (invalidData) {
+      errors.push("Please enter exactly 10 numbers between 1 and 100.");
+      invalidFields.push(dataInput);
+      document.getElementById("average").value = "";
+      document.getElementById("maximum").value = "";
+      dataErrorMsg.style.display = "block";
+    } else {
+      dataErrorMsg.style.display = "none";
+    }
+
+    if (errors.length > 0) {
+      alert("Please fix the following errors:\n\n" + errors.join("\n"));
+
+      // 清空有问题的字段
+      invalidFields.forEach(field => field.value = "");
+      return;
+    }
+
+    // No errors → save cookies and redirect
+    setCookie("username", name.value.trim());
+    setCookie("email", email.value.trim());
+    setCookie("recommend", recommend.value);
+
+    window.location.href = "success.html";
+    window.onload = showGreeting;
+  }
+  
+
+  </script>
+
+  <!--The average value and maximum value are calculated and displayed immediately after the user inputs the data-->
+  <script>
+  function processData() {
+    const dataInput = document.getElementById("data");
+    const avgField = document.getElementById("average");
+    const maxField = document.getElementById("maximum");
+    const errorMsg = document.getElementById("data-error");
+
+    const values = dataInput.value.split(',').map(val => val.trim());
+  
+    // Validate count
+    if (values.length !== 10) {
+      errorMsg.style.display = "block";
+      avgField.value = '';
+      maxField.value = '';
+      return;
+    }
+
+    // Convert to numbers and validate range
+    const nums = values.map(Number);
+    const invalid = nums.some(num => isNaN(num) || num < 1 || num > 100);
+
+    if (invalid) {
+      errorMsg.style.display = "block";
+      avgField.value = '';
+      maxField.value = '';
+      return;
+    }
+
+    // Hide error and compute
+    errorMsg.style.display = "none";
+    const sum = nums.reduce((acc, cur) => acc + cur, 0);
+    const avg = (sum / nums.length).toFixed(2);
+    const max = Math.max(...nums);
+
+    avgField.value = avg;
+    maxField.value = max;
+  }
+  </script>
+
+  <!-- JS for Ajax -->
+  <script>
+  function handleZipBlur() {
+    const zipInput = document.getElementById("zip").value.trim();
+    const cityDiv = document.getElementById("city");
+    const stateDiv = document.getElementById("state");
+    const errorSpan = document.getElementById("zip-error");
+
+    cityDiv.textContent = "";
+    stateDiv.textContent = "";
+    errorSpan.textContent = "";
+
+    if (zipInput === "") return;
+
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "zips.json", true);
+
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+        try {
+          const zipData = JSON.parse(xhr.responseText);
+          const matched = zipData.find(entry => entry.zip === zipInput);
+
+          if (matched) {
+            cityDiv.textContent = matched.city;
+            stateDiv.textContent = matched.state;
+          } else {
+            errorSpan.textContent = "Invalid zip";
+          }
+        } catch (e) {
+          errorSpan.textContent = "Error parsing zip data.";
+        }
+      } else {
+        errorSpan.textContent = "Failed to fetch zip data.";
+      }
+    };
+
+    xhr.onerror = function () {
+      errorSpan.textContent = "Network error.";
+    };
+
+    xhr.send();
+  }
+</script>
+
+
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="CS.html">CS Overview</a>
+    <a href="cs-survey.html">CS Survey</a>
+  </nav>
+
+  <!-- Header -->
+  <div class="header-box">
+    <h1>CS Department Campus-Visit Survey</h1>
+  </div>
+  <!-- Greeting Message -->
+  <div class="container my-3">
+    <div id="greeting" class="alert alert-info" role="alert" style="display: none;"></div>
+  </div>
+
+
+  <!-- Survey Form -->
+  <div class="container my-4">
+    <form onsubmit="handleSubmit(event)" autocomplete="on" class="bg-white p-4 rounded shadow-sm">
+
+      <!-- 1️ Personal Information -->
+      <div class="mb-3">
+        <label for="username" class="form-label required">Full Name</label>
+        <input type="text" class="form-control" id="username" name="username" placeholder="Jane Doe" required autofocus>
+      </div>
+
+      <div class="mb-3">
+        <label for="street" class="form-label required">Street Address</label>
+        <input type="text" class="form-control" id="street" name="street" required>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <label class="form-label required">City</label>
+          <div class="form-control bg-light" id="city">[Auto-filled]</div>
+        </div>
+        <div class="col-md-4 mb-3">
+          <label class="form-label required">State / Province</label>
+          <div class="form-control bg-light" id="state">[Auto-filled]</div>
+        </div>
+        <div class="col-md-4 mb-3">
+          <label for="zip" class="form-label required">ZIP / Postal Code</label>
+          <input type="text" class="form-control" id="zip" name="zip" pattern="\d{5}(-\d{4})?" placeholder="12345" required onblur="handleZipBlur()">
+          <span id="zip-error" class="text-danger small"></span>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="phone" class="form-label required">Telephone</label>
+        <input type="tel" class="form-control" id="phone" name="phone" placeholder="123-456-7890" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="email" class="form-label required">Email</label>
+        <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="url" class="form-label">Personal Website / Portfolio (URL)</label>
+        <input type="url" class="form-control" id="url" name="url" placeholder="https://example.com">
+      </div>
+
+      <div class="mb-3">
+        <label for="date" class="form-label required">Date of Survey</label>
+        <input type="date" class="form-control" id="date" name="date" required>
+      </div>
+
+      <!-- 2️ Likes -->
+      <fieldset class="mb-4">
+        <legend class="required">What did you like most about the campus?</legend>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" name="likes" value="students" id="likeStudents">
+          <label class="form-check-label" for="likeStudents">Students</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" name="likes" value="location" id="likeLocation">
+          <label class="form-check-label" for="likeLocation">Location</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" name="likes" value="campus" id="likeCampus">
+          <label class="form-check-label" for="likeCampus">Campus</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" name="likes" value="atmosphere" id="likeAtmosphere">
+          <label class="form-check-label" for="likeAtmosphere">Atmosphere</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" name="likes" value="dorms" id="likeDorms">
+          <label class="form-check-label" for="likeDorms">Dorm Rooms</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" name="likes" value="sports" id="likeSports">
+          <label class="form-check-label" for="likeSports">Sports</label>
+        </div>
+      </fieldset>
+
+      <!-- 3️ How did you hear -->
+      <fieldset class="mb-4">
+        <legend class="required">How did you become interested in this university?</legend>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="source" value="friends" id="srcFriends" required>
+          <label class="form-check-label" for="srcFriends">Friends</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="source" value="television" id="srcTV">
+          <label class="form-check-label" for="srcTV">Television</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="source" value="internet" id="srcInternet">
+          <label class="form-check-label" for="srcInternet">Internet</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="source" value="other" id="srcOther">
+          <label class="form-check-label" for="srcOther">Other</label>
+        </div>
+      </fieldset>
+
+      <!-- 4️ Graduation -->
+      <div class="mb-3">
+        <label for="grad-month" class="form-label required">High-School Graduation Month</label>
+        <input list="months" class="form-control" id="grad-month" name="grad-month" placeholder="Select or type..." required>
+        <datalist id="months">
+          <option value="January"><option value="February"><option value="March">
+          <option value="April"><option value="May"><option value="June">
+          <option value="July"><option value="August"><option value="September">
+          <option value="October"><option value="November"><option value="December">
+        </datalist>
+      </div>
+      <div class="mb-3">
+        <label for="grad-year" class="form-label required">Graduation Year</label>
+        <input type="number" class="form-control" id="grad-year" name="grad-year" min="1900" max="2100" placeholder="2026" required>
+      </div>
+
+      <!-- 5 Data Analysis -->
+      <div class="form-row">
+        <label for="data" class="required">Data (Enter 10 numbers between 1 and 100, comma-separated)</label>
+        <input type="text" id="data" name="data" placeholder="e.g. 10,25,30,45,50,65,70,80,90,100" required onblur="processData()">
+        <small id="data-error" style="color:red;display:none;">Please enter exactly 10 numbers between 1 and 100.</small>
+      </div>
+
+      <div class="form-row">
+        <label for="average">Average</label>
+        <input type="text" id="average" name="average" readonly>
+      </div>
+
+      <div class="form-row">
+        <label for="maximum">Maximum</label>
+        <input type="text" id="maximum" name="maximum" readonly>
+      </div>
+
+
+      <!-- 6 Recommendation -->
+      <div class="mb-3">
+        <label for="recommend" class="form-label required">Likelihood you would recommend this university</label>
+        <select class="form-select" id="recommend" name="recommend" required>
+          <option value="" disabled selected>Select…</option>
+          <option value="very-likely">Very Likely</option>
+          <option value="likely">Likely</option>
+          <option value="unlikely">Unlikely</option>
+        </select>
+      </div>
+
+      <!-- 7 Comments -->
+      <div class="mb-3">
+        <label for="comments" class="form-label">Additional Comments</label>
+        <textarea class="form-control" id="comments" name="comments" placeholder="Your comments…" rows="4"></textarea>
+      </div>
+
+      <!-- 8 Submit -->
+      <button type="submit" class="btn btn-primary">Submit Survey</button>
+      <button type="reset" class="btn btn-secondary">Reset Form</button>
+    </form>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!-- Chao Chen G01476331 -->
+<!-- This is the introduction of CS Department -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CS Department Information Page</title>
+
+  <!-- ✅ Bootstrap CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+
+    .header-box {
+      background-color: #0d6efd;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    nav a {
+      margin-right: 15px;
+      text-decoration: none;
+      color: #0d6efd;
+      font-weight: 500;
+    }
+
+    nav {
+      text-align: center;
+      padding: 15px 0;
+      background-color: #e9ecef;
+    }
+
+    .gmu-highlight {
+      background-color: #e9f5ff;
+      padding: 15px;
+      border-left: 4px solid #0d6efd;
+      margin-top: 20px;
+    }
+
+    .side-image img {
+      width: 100%;
+      margin-bottom: 15px;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="CS.html">CS Overview</a>
+    <a href="cs-survey.html">CS Survey</a>
+  </nav>
+
+  <!-- Header -->
+  <div class="header-box">
+    <h1>Description of the Department</h1>
+  </div>
+
+  <!-- Content -->
+  <div class="container mt-4">
+    <div class="row">
+      <!-- Main Text Content -->
+      <div class="col-md-8">
+        <div class="gmu-highlight mb-4">
+          The Computer Science discipline is concerned with the design, analysis, implementation, maintenance, and evolution of computer-based systems and their associated theoretical foundations. Computer science is powering the information revolution of the 21st century, and computer-based systems are used in every scholarly discipline, every sector of industry, and every walk of human life.
+        </div>
+
+        <!-- Master's Programs -->
+        <h2>Master’s Degree Programs</h2>
+        <ul>
+          <li>Computer Science</li>
+          <li>Information Systems</li>
+          <li>Software Engineering</li>
+        </ul>
+
+        <!-- Course Tables -->
+        <h2>Required Courses by Program</h2>
+
+        <h4>Master of Science in Computer Science</h4>
+        <table class="table table-bordered table-striped">
+          <thead class="table-primary">
+            <tr><th>Course Number</th><th>Course Name</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>CS 530</td><td>Mathematical Foundations of Computer Science</td></tr>
+            <tr><td>CS 531</td><td>Computer Systems & Fundamentals of Systems Programming</td></tr>
+            <tr><td>CS 583</td><td>Analysis of Algorithms</td></tr>
+          </tbody>
+        </table>
+
+        <h4>Master of Science in Information Systems</h4>
+        <table class="table table-bordered table-striped">
+          <thead class="table-primary">
+            <tr><th>Course Number</th><th>Course Name</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>COMP 502</td><td>Mathematical Foundations of Computing I</td></tr>
+            <tr><td>CS 550</td><td>Database Systems</td></tr>
+            <tr><td>INFS 622</td><td>Information Systems Analysis and Design</td></tr>
+            <tr><td>INFS 580</td><td>Analytics: Big Data to Information</td></tr>
+            <tr><td>INFS 611</td><td>Rapid Information Systems Prototyping</td></tr>
+          </tbody>
+        </table>
+
+        <h4>Master of Science in Software Engineering</h4>
+        <table class="table table-bordered table-striped">
+          <thead class="table-primary">
+            <tr><th>Course Number</th><th>Course Name</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>SWE 619</td><td>Object-Oriented Software Specification and Construction</td></tr>
+            <tr><td>SWE 621</td><td>Software Design and Architecture</td></tr>
+            <tr><td>SWE 632</td><td>User Interface Design and Development</td></tr>
+            <tr><td>SWE 637</td><td>Software Testing</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Side Images -->
+      <div class="col-md-4 side-image">
+        <img src="cs1.jpg" alt="Engineer Building" class="img-fluid rounded">
+        <img src="cs2.jpg" alt="Map" class="img-fluid rounded">
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
