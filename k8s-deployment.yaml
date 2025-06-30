@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
       - name: survey-app
-        image: chaochen46/survey-app:latest   
+        image: chaochen46/survey-app:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
 ---
