@@ -159,8 +159,6 @@
 
     if (errors.length > 0) {
       alert("Please fix the following errors:\n\n" + errors.join("\n"));
-
-      // 清空有问题的字段
       invalidFields.forEach(field => field.value = "");
       return;
     }
@@ -217,7 +215,7 @@
   }
   </script>
 
-  <!-- JS for Ajax -->
+  <!-- JS for Ajax
   <script>
   function handleZipBlur() {
     const zipInput = document.getElementById("zip").value.trim();
@@ -261,7 +259,7 @@
     xhr.send();
   }
 </script>
-
+ -->
 
 </head>
 <body>
