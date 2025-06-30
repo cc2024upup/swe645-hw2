@@ -28,5 +28,11 @@ pipeline {
                 sh 'kubectl apply -f k8s-deployment.yaml'
             }
         }
+        stage('Restart Deployment') {
+    steps {
+        sh 'kubectl rollout restart deployment survey-app'
+    }
+}
+
     }
 }
