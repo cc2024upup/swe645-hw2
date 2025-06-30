@@ -35,9 +35,9 @@ pipeline {
             }
         }
         stage('Restart Deployment') {
-    steps {
-        sh 'kubectl rollout restart deployment survey-app'
-    }
+            steps {
+                sh 'kubectl rollout restart deployment survey-app'
+            }
 }
 
     }
