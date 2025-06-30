@@ -10,7 +10,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t chaochen46/survey-app:latest .'
+                sh 'docker build -t chaochen46/survey-app:${commitId} .'
             }
         }
 
