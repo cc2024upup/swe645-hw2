@@ -38,7 +38,7 @@ pipeline {
             steps {
                 sh 'kubectl rollout restart deployment survey-app'
             }
-}
+        }
 
     }
 }
