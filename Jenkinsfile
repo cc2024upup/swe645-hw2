@@ -2,6 +2,11 @@ pipeline {
     agent any
 
     stages {
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()  
+            }
+        }
         stage('Clone Code') {
             steps {
                git branch: 'main', url:'https://github.com/cc2024upup/swe645-hw2.git'
